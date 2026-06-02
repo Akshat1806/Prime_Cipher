@@ -306,26 +306,7 @@ Not suitable for:
 
 ---
 
-# 15. GitHub Release Checklist
-
-Before release:
-
-* Include full source code
-* Include algorithm specification
-* Include this review package
-* Include license
-* Include disclaimer
-* Include reproducible examples
-
----
-
-# 16. Suggested License
-
-MIT License with attribution requirement.
-
----
-
-# 17. Suggested Disclaimer
+# 15. Disclaimer
 
 This cipher is experimental.
 
@@ -340,7 +321,7 @@ Use only for:
 
 ---
 
-# 18. Final Notes
+# 16. Final Notes
 
 This package is intended to encourage:
 
