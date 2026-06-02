@@ -1,4 +1,4 @@
-# Akshat Prime Cipher (APC) — Peer Review & KPA Package
+# Prime Cipher (PC) — Peer Review & KPA Package
 
 Author: Akshat Dhabalia
 Version: Experimental Review Build
@@ -22,7 +22,7 @@ The cipher is experimental and not intended for production security.
 
 # 2. Cipher Overview
 
-The Akshat Prime Cipher (APC) is a deterministic master-key driven hybrid cipher system combining:
+The Prime Cipher (PC) is a deterministic master-key driven hybrid cipher system combining:
 
 * Printable ASCII substitution
 * Case-sensitive dual grouping
