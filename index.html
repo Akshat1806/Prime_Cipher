@@ -1,0 +1,300 @@
+
+<style>
+h2.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:transparent}
+.apc-wrap{font-family:var(--font-mono,'Courier New',monospace);padding:16px 0;color:var(--color-text-primary)}
+.section-title{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:8px;text-align:center}
+.layer{margin-bottom:6px}
+.row{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
+.node{border:0.5px solid;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;transition:opacity .15s,transform .1s;user-select:none;text-align:center;position:relative}
+.node:hover{opacity:.8;transform:scale(1.03)}
+.node-input{background:rgba(55,138,221,.12);border-color:#378ADD;color:#185FA5}
+.node-hash{background:rgba(29,158,117,.12);border-color:#1D9E75;color:#0F6E56}
+.node-param{background:rgba(127,119,221,.12);border-color:#7F77DD;color:#3C3489}
+.node-pipe{background:rgba(186,117,23,.12);border-color:#BA7517;color:#854F0B}
+.node-decision{background:rgba(226,75,74,.12);border-color:#E24B4A;color:#A32D2D;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);padding:14px 20px;min-width:160px}
+.node-output{background:rgba(99,153,34,.12);border-color:#639922;color:#3B6D11}
+.node-rand{background:rgba(216,90,48,.12);border-color:#D85A30;color:#993C1D}
+@media(prefers-color-scheme:dark){
+.node-input{background:rgba(55,138,221,.18);border-color:#378ADD;color:#85B7EB}
+.node-hash{background:rgba(29,158,117,.18);border-color:#1D9E75;color:#5DCAA5}
+.node-param{background:rgba(127,119,221,.18);border-color:#7F77DD;color:#AFA9EC}
+.node-pipe{background:rgba(186,117,23,.18);border-color:#EF9F27;color:#FAC775}
+.node-decision{background:rgba(226,75,74,.18);border-color:#E24B4A;color:#F09595}
+.node-output{background:rgba(99,153,34,.18);border-color:#639922;color:#97C459}
+.node-rand{background:rgba(216,90,48,.18);border-color:#D85A30;color:#F0997B}
+}
+.arrow-down{display:flex;justify-content:center;height:18px;align-items:center;position:relative}
+.arrow-down svg{display:block}
+.side-panel{border:0.5px solid;border-radius:8px;padding:10px 12px;font-size:11px;min-width:130px;max-width:150px}
+.panel-blue{background:rgba(55,138,221,.07);border-color:#378ADD88}
+.panel-orange{background:rgba(216,90,48,.07);border-color:#D85A3088}
+.panel-title{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.panel-blue .panel-title{color:#185FA5}
+.panel-orange .panel-title{color:#993C1D}
+@media(prefers-color-scheme:dark){
+.panel-blue .panel-title{color:#85B7EB}
+.panel-orange .panel-title{color:#F0997B}
+}
+.panel-item{padding:2px 0;font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.panel-dot-blue::before{content:'●';color:#378ADD;margin-right:5px;font-size:9px}
+.panel-dot-orange::before{content:'●';color:#D85A30;margin-right:5px;font-size:9px}
+.formula-box{display:inline-block;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:6px;padding:3px 10px;font-family:var(--font-mono,'Courier New',monospace);font-size:11px;color:var(--color-text-primary);margin-top:3px}
+.pipeline-main{display:flex;gap:12px;align-items:flex-start;justify-content:center}
+.pipeline-col{display:flex;flex-direction:column;align-items:center;flex:0 0 auto;min-width:200px;max-width:240px}
+.side-panels-col{display:flex;flex-direction:column;gap:8px;padding-top:24px;flex:0 0 150px}
+.tooltip{display:none;position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--color-text-secondary);white-space:nowrap;z-index:10;pointer-events:none;box-shadow:0 2px 12px rgba(0,0,0,.12);line-height:1.5;font-family:var(--font-sans,'Anthropic Sans',sans-serif);min-width:200px;max-width:260px;white-space:normal;text-align:center}
+.node:hover .tooltip{display:block}
+.chain-block{border:0.5px solid;border-radius:8px;padding:8px 14px;font-size:11px;background:rgba(127,119,221,.1);border-color:#7F77DD66;text-align:center;color:var(--color-text-primary)}
+@media(prefers-color-scheme:dark){.chain-block{background:rgba(127,119,221,.18)}}
+.chain-row{display:flex;align-items:center;gap:6px;justify-content:center}
+.chain-label{font-size:10px;color:var(--color-text-tertiary)}
+.ascii-card{border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:8px 14px;text-align:center;background:var(--color-background-secondary);font-size:11px;color:var(--color-text-secondary)}
+.ascii-card b{display:block;font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.section-divider{border:none;border-top:0.5px dashed var(--color-border-tertiary);margin:10px 40px}
+.layer-badge{display:inline-block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:6px;font-weight:500}
+.badge-blue{background:rgba(55,138,221,.12);color:#185FA5;border:0.5px solid #378ADD66}
+.badge-purple{background:rgba(127,119,221,.12);color:#3C3489;border:0.5px solid #7F77DD66}
+.badge-amber{background:rgba(186,117,23,.12);color:#854F0B;border:0.5px solid #BA751766}
+.badge-green{background:rgba(99,153,34,.12);color:#3B6D11;border:0.5px solid #63992266}
+@media(prefers-color-scheme:dark){
+.badge-blue{color:#85B7EB}.badge-purple{color:#AFA9EC}.badge-amber{color:#FAC775}.badge-green{color:#97C459}
+}
+.collapsible-btn{background:none;border:0.5px solid var(--color-border-secondary);border-radius:6px;padding:4px 12px;font-size:11px;cursor:pointer;color:var(--color-text-secondary);transition:background .15s;margin-top:4px;font-family:inherit}
+.collapsible-btn:hover{background:var(--color-background-secondary)}
+.collapsible-content{overflow:hidden;transition:max-height .3s ease;max-height:0}
+.collapsible-content.open{max-height:400px}
+.animated-arrow{animation:pulse-down 1.2s ease-in-out infinite}
+@keyframes pulse-down{0%,100%{opacity:.4;transform:translateY(-2px)}50%{opacity:1;transform:translateY(2px)}}
+.chain-animated{animation:chain-glow 1.6s ease-in-out infinite}
+@keyframes chain-glow{0%,100%{opacity:.5}50%{opacity:1}}
+</style>
+
+<h2 class="sr-only"> Prime Cipher (PC) cryptographic architecture diagram showing input layer, parameter derivation, encryption pipeline, and output layer with interactive stage descriptions.</h2>
+<div class="apc-wrap">
+
+<div style="text-align:center;margin-bottom:16px">
+  <div style="font-size:18px;font-weight:500;color:var(--color-text-primary);letter-spacing:.04em">Prime Cipher</div>
+  <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px;letter-spacing:.1em">PC — Cryptographic Architecture</div>
+</div>
+
+<!-- LAYER 1: INPUTS -->
+<div class="layer">
+  <div style="text-align:center"><span class="layer-badge badge-blue">① Inputs layer</span></div>
+  <div class="row">
+    <div class="node node-input" onclick="sendPrompt('What is the Plaintext input in APC?')">Plaintext<span class="tooltip">Raw message to be encrypted.<br>Passed into the word-splitting stage.</span></div>
+    <div class="node node-input" onclick="sendPrompt('How is the MASTER_KEY used in APC?')">MASTER_KEY<span class="tooltip">Root secret. Seeds all deterministic parameters via SHA-256 + RNG.</span></div>
+    <div class="node node-input" onclick="sendPrompt('What is the role of PRIME_NUMBER in APC?')">PRIME_NUMBER<span class="tooltip">Initializes the first pivot index.<br>i₁ = (P − L₁) mod L₁</span></div>
+    <div class="node node-input" onclick="sendPrompt('What does THRESHOLD control in APC?')">THRESHOLD<span class="tooltip">Controls pre-padding logic.<br>If word length &lt; THRESHOLD → apply padding.</span></div>
+  </div>
+</div>
+
+<div class="arrow-down"><svg width="2" height="18"><line x1="1" y1="0" x2="1" y2="18" stroke="var(--color-border-secondary)" stroke-width="1.5"/></svg></div>
+
+<!-- LAYER 2: PARAMETER DERIVATION -->
+<div class="layer">
+  <div style="text-align:center"><span class="layer-badge badge-purple">② Parameter derivation</span></div>
+  <div style="text-align:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:8px">Derived entirely from MASTER_KEY</div>
+  <div class="row" style="align-items:flex-start;gap:10px">
+    <div class="pipeline-col" style="min-width:180px">
+      <div class="node node-hash" style="width:100%" onclick="sendPrompt('How does SHA-256 hashing work in APC key derivation?')">SHA-256 hash<span class="tooltip">MASTER_KEY → fixed 256-bit hash digest. Foundation for deterministic seed.</span></div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="var(--color-border-secondary)" stroke-width="1.5"/></svg></div>
+      <div class="node node-hash" style="width:100%" onclick="sendPrompt('How is the seed generated in APC?')">Seed generation<span class="tooltip">Hash bytes converted to integer seed for deterministic RNG initialization.</span></div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="var(--color-border-secondary)" stroke-width="1.5"/></svg></div>
+      <div class="node node-hash" style="width:100%" onclick="sendPrompt('What is deterministic RNG in APC?')">Deterministic RNG<span class="tooltip">Seeded PRNG — same key always produces same parameter sequence. Never truly random.</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;flex:0 0 auto">
+      <div class="side-panel panel-blue">
+        <div class="panel-title">Deterministic params</div>
+        <div class="panel-item panel-dot-blue">upper_grp</div>
+        <div class="panel-item panel-dot-blue">lower_grp</div>
+        <div class="panel-item panel-dot-blue">affine_a</div>
+        <div class="panel-item panel-dot-blue">affine_b</div>
+        <div class="panel-item panel-dot-blue">Myszkowski key 1</div>
+        <div class="panel-item panel-dot-blue">Myszkowski key 2</div>
+        <div class="panel-item panel-dot-blue">Columnar key 1</div>
+        <div class="panel-item panel-dot-blue">Columnar key 2</div>
+        <div class="panel-item panel-dot-blue">Key lengths 3–16</div>
+      </div>
+      <div class="side-panel panel-orange">
+        <div class="panel-title">Random only</div>
+        <div class="panel-item panel-dot-orange">Padding chars</div>
+        <div class="panel-item" style="font-size:10px;color:var(--color-text-tertiary)">(final layer only)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down animated-arrow"><svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
+
+<!-- LAYER 3: ENCRYPTION PIPELINE -->
+<div class="layer">
+  <div style="text-align:center"><span class="layer-badge badge-amber">③ Encryption pipeline</span></div>
+  <div class="pipeline-main">
+    <div class="pipeline-col">
+
+      <!-- Split Into Words -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('How does APC split input into words?')">Split into words<span class="tooltip">Plaintext tokenized by spaces. Each word is processed independently then rejoined.</span></div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Pre-padding decision -->
+      <div class="node node-decision" onclick="sendPrompt('What is the pre-padding logic in APC?')">
+        length &lt; THRESHOLD?
+        <span class="tooltip">If word is short, apply one padding layer before pivot transformation. Otherwise skip directly to pivot.</span>
+      </div>
+      <div class="row" style="gap:16px;margin:4px 0">
+        <div style="text-align:center">
+          <div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:2px">Yes → pad</div>
+          <div class="node node-rand" style="font-size:11px;padding:5px 10px" onclick="sendPrompt('How does pre-padding work in APC?')">Apply padding<span class="tooltip">One padding layer added to short words before pivot processing.</span></div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:10px;color:var(--color-text-tertiary);margin-bottom:2px">No → skip</div>
+          <div style="font-size:11px;padding:5px 10px;border:0.5px dashed var(--color-border-tertiary);border-radius:8px;color:var(--color-text-tertiary)">Continue</div>
+        </div>
+      </div>
+      <div class="arrow-down"><svg width="2" height="10"><line x1="1" y1="0" x2="1" y2="10" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Pivot Init -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('How does pivot initialization work in APC?')">
+        Pivot initialization
+        <div class="formula-box">i₁ = (P − L₁) mod L₁</div>
+        <span class="tooltip">Initial pivot index from PRIME_NUMBER (P) and first word length (L₁). Anchors the chaining sequence.</span>
+      </div>
+      <div class="arrow-down chain-animated"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
+
+      <!-- Pivot Chaining -->
+      <div class="node node-pipe" style="width:100%;background:rgba(127,119,221,.12);border-color:#7F77DD" onclick="sendPrompt('How does pivot chaining work in APC?')">
+        Pivot chaining
+        <button class="collapsible-btn" onclick="event.stopPropagation();toggleCollapse('chain-formula')">Show formula</button>
+        <div class="collapsible-content" id="chain-formula">
+          <div style="margin-top:6px;text-align:left;line-height:2">
+            <div class="formula-box">X = i(n−1) × L(n)</div><br>
+            <div class="formula-box">p = next_prime(X)</div><br>
+            <div class="formula-box">Y = X + p + i(n−1)</div><br>
+            <div class="formula-box">i(n) = Y mod L(n)</div>
+          </div>
+        </div>
+        <span class="tooltip">Each word's pivot depends on the previous word's pivot index. Creates a dependency chain across all words.</span>
+      </div>
+      <div class="arrow-down chain-animated"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#7F77DD" stroke-width="1.5"/></svg></div>
+
+      <!-- Stateful chaining visual -->
+      <div style="width:100%;border:0.5px dashed #7F77DD;border-radius:8px;padding:8px;margin-bottom:4px">
+        <div style="text-align:center;font-size:10px;color:var(--color-text-tertiary);margin-bottom:6px;letter-spacing:.08em">Stateful chaining</div>
+        <div class="chain-row">
+          <div class="chain-block">Word(n−1)<div style="font-size:9px;margin-top:2px;color:var(--color-text-tertiary)">prev encrypted</div></div>
+          <div style="font-size:16px;color:#7F77DD;animation:chain-glow 1.6s infinite">→</div>
+          <div class="chain-block">pivot index<div style="font-size:9px;margin-top:2px;color:var(--color-text-tertiary)">state carried</div></div>
+          <div style="font-size:16px;color:#7F77DD;animation:chain-glow 1.6s infinite .4s">→</div>
+          <div class="chain-block">Word(n)<div style="font-size:9px;margin-top:2px;color:var(--color-text-tertiary)">next input</div></div>
+        </div>
+      </div>
+
+      <!-- Pivot Transformation -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('How does pivot transformation work in APC?')">
+        Pivot transformation
+        <div class="formula-box">(value + pivot) mod 95</div>
+        <span class="tooltip">Each character in the word is shifted by the pivot index across the printable ASCII domain (95 chars).</span>
+      </div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Repeat Transformation -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('What is the repeat transformation in APC?')">
+        Repeat transformation
+        <div class="formula-box">(value + difference) mod 95</div>
+        <span class="tooltip">Repeated characters detected and transformed using a prime-based difference value to break plaintext patterns.</span>
+      </div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Affine Cipher -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('How does the affine cipher work in APC?')">
+        Affine cipher
+        <div class="formula-box">(ax + b) mod 95</div>
+        <span class="tooltip">Affine substitution using deterministic a and b derived from MASTER_KEY. Applied to each character.</span>
+      </div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Join Full Text -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('What happens at the join stage in APC?')">Join full text<span class="tooltip">All transformed words rejoined with spaces. Ready for global transposition layers.</span></div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Double Myszkowski -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('How does double Myszkowski transposition work in APC?')">
+        Double Myszkowski transposition
+        <div style="display:grid;grid-template-columns:repeat(4,18px);gap:2px;margin-top:4px;justify-content:center">
+          <div style="width:18px;height:14px;border:0.5px solid #BA751788;border-radius:2px;font-size:8px;text-align:center;line-height:14px">A</div>
+          <div style="width:18px;height:14px;border:0.5px solid #BA751788;border-radius:2px;font-size:8px;text-align:center;line-height:14px">C</div>
+          <div style="width:18px;height:14px;border:0.5px solid #BA751788;border-radius:2px;font-size:8px;text-align:center;line-height:14px">B</div>
+          <div style="width:18px;height:14px;border:0.5px solid #BA751788;border-radius:2px;font-size:8px;text-align:center;line-height:14px">D</div>
+        </div>
+        <span class="tooltip">Global transposition applied twice with different keys. Preserves spaces. Rearranges character positions across entire ciphertext.</span>
+      </div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Double Columnar -->
+      <div class="node node-pipe" style="width:100%" onclick="sendPrompt('How does double columnar transposition work in APC?')">
+        Double columnar transposition
+        <span class="tooltip">Per-word columnar transposition applied twice. Rearranges character columns within each word independently.</span>
+      </div>
+      <div class="arrow-down"><svg width="2" height="14"><line x1="1" y1="0" x2="1" y2="14" stroke="#BA7517" stroke-width="1"/></svg></div>
+
+      <!-- Final Padding -->
+      <div class="node node-rand" style="width:100%" onclick="sendPrompt('How does final padding work in APC?')">
+        Final padding
+        <div style="font-size:11px;margin-top:4px;letter-spacing:.05em">
+          <span style="color:#D85A30;background:rgba(216,90,48,.15);padding:1px 4px;border-radius:3px;border:0.5px solid #D85A3066">¿§</span>
+          <span style="color:var(--color-text-tertiary)"> ← random pair-of-pairs</span>
+        </div>
+        <span class="tooltip">Random ASCII pair-of-pairs inserted as padding. Only truly random component. Obscures ciphertext length.</span>
+      </div>
+
+    </div>
+
+    <!-- Side panels alongside pipeline -->
+    <div class="side-panels-col">
+      <div class="ascii-card">
+        <b>Printable ASCII domain</b>
+        ASCII 32 → 126<br>
+        <span style="font-size:13px;font-weight:500">95</span> total characters
+      </div>
+      <div class="side-panel panel-blue" style="max-width:160px">
+        <div class="panel-title">Deterministic</div>
+        <div class="panel-item panel-dot-blue">Grouping</div>
+        <div class="panel-item panel-dot-blue">Affine a, b</div>
+        <div class="panel-item panel-dot-blue">Transposition keys</div>
+        <div class="panel-item panel-dot-blue">Key lengths</div>
+        <div class="panel-item panel-dot-blue">Pivot indices</div>
+      </div>
+      <div class="side-panel panel-orange" style="max-width:160px">
+        <div class="panel-title">Random</div>
+        <div class="panel-item panel-dot-orange">Padding chars only</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down animated-arrow" style="margin-top:4px"><svg width="2" height="20"><line x1="1" y1="0" x2="1" y2="20" stroke="#639922" stroke-width="1.5"/></svg></div>
+
+<!-- LAYER 4: OUTPUT -->
+<div class="layer">
+  <div style="text-align:center"><span class="layer-badge badge-green">④ Output layer</span></div>
+  <div class="row">
+    <div class="node node-output" style="padding:10px 28px;font-size:14px;font-weight:500" onclick="sendPrompt('What does the final APC ciphertext look like?')">
+      Ciphertext
+      <span class="tooltip">Final encrypted output. Decryptable only with exact MASTER_KEY, PRIME_NUMBER, and THRESHOLD.</span>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:14px;font-size:10px;color:var(--color-text-tertiary);letter-spacing:.08em">
+  Hover nodes for details · Click to explore in chat
+</div>
+
+</div>
+<script>
+function toggleCollapse(id){
+  var el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+</script>
